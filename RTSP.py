@@ -43,7 +43,7 @@ ethernets:
         - 8.8.4.4  # DNS Secundario (Google para evitar fallos)
     """)
 
-    show_message("Pulsa INTRO para continuar o ESCAPE para volver al menú inicial ...")
+    show_message("PULSA [INTRO] PARA CONTINUAR ó [ESCAPE] PARA CANCELAR EL PROCESO ...")
 
     # Esperar por la acción del usuario
     option = input()
@@ -66,7 +66,7 @@ ethernets:
     open_in_editor("/etc/netplan/00-installer-config.yaml")
 
     # Esperar a que el usuario cierre el editor
-    print("Esperando a que se cierre el archivo...")
+    print("ESPERANDO A QUE SE CIERRE EL ARCHIVO ...")
 
     # Una vez que se haya cerrado el archivo, cambiar los permisos del archivo 00-installer-config.yaml
     run_command("sudo chmod 644 /etc/netplan/00-installer-config.yaml", wait=False)
@@ -77,18 +77,18 @@ ethernets:
     run_command("sudo systemctl restart NetworkManager", wait=False)
     time.sleep(2)
 
-    show_message("¡Enhorabuena! Ya tienes la tarjeta de red configurada para tu Servidor RTSP.")
+    print("\033[1m\033[32m********** ¡ENHORABUENA! YA TIENES CONFIGURADA LA TARJETA DE RED DE TU SERVIDOR DE VIDEO EN STREAMING RTSP. **********\033[0m")
     main_menu()
 
 def configure_firewall():
     """ Configura los puertos del firewall """
-    show_message("Ahora vamos a configurar los puertos del firewall para el servidor RTSP.")
+    show_message("A CONTINUACIÓN VAMOS A CONFIGURAR LOS PUERTIOS DEL FIREWALL PARA EL SERVIDOR DE VIDEO DE STREAMING RTSP")
 
     # Comprobar si los puertos ya están configurados
     result = subprocess.run(['sudo', 'ufw', 'status'], stdout=subprocess.PIPE)
     if "8554/tcp" in result.stdout.decode():
         show_message("La configuración del firewall ya se ha realizado.")
-        choice = input("Para sobrescribir la configuración ya existente pulsa [INTRO], para descartar pulsar [ESCAPE]: ")
+        choice = input("PARA SOBREESCRIBIR LA CONFIGURTACIÓN PULSE [INTRO], PARA DESCARTAR PULSE [ESCAPE]: ")
         if choice.lower() == "escape":
             main_menu()
         elif choice.lower() == "intro":
@@ -100,13 +100,13 @@ def configure_firewall():
     run_command("sudo ufw allow 8554/tcp")
     run_command("sudo ufw status verbose")
     run_command("sudo ufw reload")
-
-    show_message("¡Enhorabuena! Ya tienes los puertos del Firewall configurados para tu Servidor RTSP.")
+    
+    print("\033[1m\033[32m********** ¡ENHORABUENA! YA TIENES CONFIGURADOS LOS PÙERTOS DEL FIREWALL DE TU SERVIDOR DE VIDEO EN STREAMING RTSP. **********\033[0m")
     main_menu()
 
 def install_mediamtx():
     """ Instala y configura el servidor de streaming Mediamtx """
-    show_message("Ahora procederemos con la instalación del Servidor de video STREAMING (mediamtx).")
+    show_message("AHORA PROCEDEREMOS CON LA INSTALACIÓN DEL SERVIDOR DE VIDEO STREAMING RTSP")
 
     run_command("sudo apt install net-tools -y")
     run_command("sudo apt update && sudo apt full-upgrade -y")
@@ -119,13 +119,13 @@ def install_mediamtx():
     run_command("chmod 777 /usr/local/etc/mediamtx.yml")
 
     show_message("""
-A continuación se abrirá un documento en el que deberás buscar lo siguiente:
+A CONTINUACIÓN SE ABRIRÁ UN DOCUMENTO EN EL QUE DEBERÁS DE BUSCAR LO SIGUIENTE:
 # The handshake is always performed with TCP.
 protocols: [udp, multicast, tcp]
 
 Deberás de borrar 'udp' de manera que resulte:
 protocols: [multicast, tcp]
-Cuando lo tengas, no modifiques nada más, guarda el documento, confirma y ciérralo.
+CUANDO LO TENGAS, NO MODIFIQUES NADA MÁS, GUARDA EL DOCUMENTO, CONFIRMA Y CIERRALO.
     """)
     input("Pulsa INTRO para continuar...")
 
@@ -134,7 +134,7 @@ Cuando lo tengas, no modifiques nada más, guarda el documento, confirma y ciér
     run_command("sudo mv mediamtx /usr/local/bin/")
 
     show_message("""
-A continuación se abrirá un documento en el que deberás poner lo siguiente, ponlo a mano ya que copiando y pegando no funciona:
+A CONTINUACIÓN SE ABRIRÁ UN DOCUMENTO EN EL QUE DEBERÁS DE PONER LO SIGUIENTE, COPIAR Y PEGAR NO FUNCIONA, PONLO A MANO:
 [Unit]
 Wants=network.target
 [Service]
@@ -142,7 +142,7 @@ ExecStart=/usr/local/bin/mediamtx /usr/local/etc/mediamtx.yml
 [Install]
 WantedBy=multi-user.target
 
-Cuando lo tengas, no modifiques nada más, guarda el documento, confirma y ciérralo.
+CUANDO LO TENGAS, NO MODIFIQUES NADA MÁS, GUARDA EL DOCUMENTO, CONFIRMA Y CIERRALO.
     """)
     input("Pulsa INTRO para continuar...")
 
@@ -152,19 +152,24 @@ Cuando lo tengas, no modifiques nada más, guarda el documento, confirma y ciér
     run_command("sudo systemctl daemon-reload")
     run_command("sudo systemctl restart mediamtx")
     run_command("sudo systemctl enable mediamtx")
-
-    show_message("¡Enhorabuena!, ya tienes creado tu Servidor de video en STREAMING (mediamtx).")
+    print("\033[1m\033[32m********** ¡ENHORABUENA! YA TIENES CREADO TU SERVIDOR DE VIDEO EN STREAMING RTSP. **********\033[0m")
     main_menu()
 
 def main_menu():
     """ Menú principal """
     while True:
-        print("\nBienvenido al script de configuración para el Servidor RTSP")
-        print("[1] Definir la dirección IPv4 privada estática")
-        print("[2] Definir los puertos del Firewall")
-        print("[3] Instalación del Servidor de Video STREAMING (mediamtx)")
-        print("[0] Salir del script")
-        choice = input("Seleccione una opción: ")
+        print("|-----------------------------------------------------------------------------|")
+        print("|        MENÚ PRINCIPAL - CONFIGURACIÓN SERVIDOR VIDEO DE STREAMING RTSP      |")
+        print("|-----------------------------------------------------------------------------|")
+        print("| 1. Configurar la dirección IPv4 Privada Estática                            |")
+        print("|-----------------------------------------------------------------------------|")
+        print("| 2. Configurar los puertos del Firewall                                      |")
+        print("|-----------------------------------------------------------------------------|")
+        print("| 3. Instalación del Servidor de Video en Streaming RTSP (mediamtx)           |")
+        print("|-----------------------------------------------------------------------------|")
+        print("| 0. SALIR                                                                    |")
+        print("|-----------------------------------------------------------------------------|")
+        choice = input("SELECCIONE UNA OPCIÓN: ")
 
         if choice == '1':
             set_static_ip()
@@ -173,10 +178,11 @@ def main_menu():
         elif choice == '3':
             install_mediamtx()
         elif choice == '0':
-            print("Saliendo del script...")
+            print( "\033[1m\033[32m********** ¡ GRACIAS POR VISITARNOS ! VUELVE PRONTO . **********\033[0m")
             sys.exit(0)  # Salir del script
         else:
-            print("Opción no válida. Intente nuevamente.")
+            print("\033[1m\033[32m********** ¡OPCIÓN NO VÁLIDA ! INTÉNTALO NUEVAMENTE . **********\033[0m")
+           
 
 if __name__ == "__main__":
     main_menu()
