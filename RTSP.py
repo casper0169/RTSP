@@ -4,7 +4,7 @@ import time
 import sys
 
 def run_command(command, wait=True):
-    """ Ejecuta un comando en el sistema y muestra el progreso. """
+    """ EEJECUTA UN COMANDO Y MUESTRA EL PROCESO EN PANTALLA. """
     print(f"Ejecutando: {command}")
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
@@ -23,14 +23,14 @@ def show_message(message):
     print(message)
 
 def open_in_editor(file_path):
-    """ Abre un archivo en nano para que el usuario pueda editarlo. """
+    """ ABRE EL ARCHIVO nano PARA CONFIGURARLO. """
     print(f"A continuación se abrirá el archivo {file_path} para editarlo.")
     subprocess.Popen(['nano', file_path]).wait()
 
 def set_static_ip():
-    """ Configura la dirección IPv4 privada estática """
+    """ CONFIGURA LA DIRECCIÓN IPv4 PRIVADA ESTÁTICA """
     show_message("""
-Ahora tendrás que modificar el archivo de configuración de la tarjeta de red de tu ordenador / máquina virtual para que tenga una dirección IPv4 privada estática. Copia el siguiente contenido:
+AHORA MODIFCARÁS EL ARCHIVO DE CONFIGURTACIÓN DE LA DIRECCIÓN IPv4 PRIVADA ESTÁTICA DEL SERVIDOR DE VIDEO STREAMING RTSP. COPIA EL SIGUIENTE CONTENIDO:
 version: 2
 renderer: NetworkManager
 ethernets:
@@ -81,13 +81,13 @@ ethernets:
     main_menu()
 
 def configure_firewall():
-    """ Configura los puertos del firewall """
-    show_message("A CONTINUACIÓN VAMOS A CONFIGURAR LOS PUERTIOS DEL FIREWALL PARA EL SERVIDOR DE VIDEO DE STREAMING RTSP")
+    """ CONFIGURAR LOS PUERTOS DEL FIREWALL """
+    show_message("A CONTINUACIÓN VAMOS A CONFIGURAR LOS PUERTOS DEL FIREWALL PARA EL SERVIDOR DE VIDEO DE STREAMING RTSP")
 
     # Comprobar si los puertos ya están configurados
     result = subprocess.run(['sudo', 'ufw', 'status'], stdout=subprocess.PIPE)
     if "8554/tcp" in result.stdout.decode():
-        show_message("La configuración del firewall ya se ha realizado.")
+        show_message("LA CONFIGURACIÓN DE LOS PUERTOS DE FIREWALL YA ESTÁN CONFIGURADOS.")
         choice = input("PARA SOBREESCRIBIR LA CONFIGURTACIÓN PULSE [INTRO], PARA DESCARTAR PULSE [ESCAPE]: ")
         if choice.lower() == "escape":
             main_menu()
